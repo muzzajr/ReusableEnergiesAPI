@@ -1,0 +1,6 @@
+@RenewableEnergiesApi_HostAddress = http://localhost:5266
+
+GET {{RenewableEnergiesApi_HostAddress}}/api/get-top-ten-records
+Accept: application/json
+
+###
