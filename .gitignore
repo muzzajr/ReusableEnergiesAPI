@@ -25,6 +25,7 @@ bld/
 
 #IDE Folder
 .vs
+*\.vs
 
 #Database Files
 .\RenewableEnergiesApi\RenewableEnergies.db
