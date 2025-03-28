@@ -19,6 +19,17 @@ builder.Services.AddSwaggerGen();
 // Register AppDbContext with dependency injection
 builder.Services.AddDbContext<AppDbContext>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,8 +43,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+// Use the CORS policy
+app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

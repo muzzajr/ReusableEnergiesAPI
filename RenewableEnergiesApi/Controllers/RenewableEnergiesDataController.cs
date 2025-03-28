@@ -4,6 +4,7 @@ using RenewableEnergiesApi.DB;
 using RenewableEnergiesApi.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace RenewableEnergiesApi.Controllers
 {
@@ -25,7 +26,7 @@ namespace RenewableEnergiesApi.Controllers
         }
 
         [HttpGet("average-installed-capacity/{energyType}")]
-        public async Task<GenericResponse> GetAverageInstalledCapacity([FromRoute] string energyType)
+        public async Task<ChartResponse> GetAverageInstalledCapacity([FromRoute] string energyType)
         {
             Enum.TryParse(energyType, out TypesOfRenewableEnergy typeOfRenewableEnergy);
 
@@ -37,7 +38,7 @@ namespace RenewableEnergiesApi.Controllers
             var averageInstalledCapacity = type1Records
                 .Average(record => record.InstalledCapacityMW);
 
-            return new GenericResponse
+            return new ChartResponse
             {
                 title = energyType,
                 dataPoints = [averageInstalledCapacity]
@@ -45,12 +46,13 @@ namespace RenewableEnergiesApi.Controllers
         }
 
         [HttpGet("all-average-installed-capacity")]
-        public async Task<List<GenericResponse>> GettAllEnergyTypeInstalledCapacity()
+        public async Task<ChartResponse> GettAllEnergyTypeInstalledCapacity()
         {
             var allEnergyTypes = Enum.GetValues(typeof(TypesOfRenewableEnergy))
                 .Cast<TypesOfRenewableEnergy>()
                 .ToList();
-            var allAverageInstalledCapacity = new List<GenericResponse>();
+            var allAverageInstalledCapacity = new List<double>();
+
             foreach (var energyType in allEnergyTypes)
             {
                 var typeRecords = await _context.Records
@@ -58,21 +60,28 @@ namespace RenewableEnergiesApi.Controllers
                     .ToListAsync();
                 var averageInstalledCapacity = typeRecords
                     .Average(record => record.InstalledCapacityMW);
-                allAverageInstalledCapacity.Add(new GenericResponse
-                {
-                    title = energyType.ToString(),
-                    dataPoints = [averageInstalledCapacity]
-                });
+
+                allAverageInstalledCapacity.Add(averageInstalledCapacity);
             }
-            return allAverageInstalledCapacity;
+
+            var response = new ChartResponse
+            {
+                title = "Average Installed Capacity of Different Types of Renewable Energy",
+                labels = allEnergyTypes.Select(energyType => energyType.ToString()).ToArray(),
+                dataPoints = allAverageInstalledCapacity
+            };
+
+            return response;
         }
 
-        public class GenericResponse
+        public class ChartResponse
         {
             public required string title { get; set; }
-            public required double[] dataPoints { get; set; }
 
-            public GenericResponse() { }
+            public string[]? labels { get; set; }
+            public required List<double> dataPoints { get; set; }
+
+            public ChartResponse() { }
         }
     }
 
