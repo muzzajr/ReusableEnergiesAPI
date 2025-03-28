@@ -25,12 +25,12 @@ bld/
 
 #IDE Folder
 .vs
-*\.vs
+*/.vs
 
 #Database Files
-.\RenewableEnergiesApi\RenewableEnergies.db
-.\RenewableEnergiesApi\RenewableEnergies.db-shm
-.\RenewableEnergiesApi\RenewableEnergies.db-wal
+/RenewableEnergiesApi/RenewableEnergies.db
+/RenewableEnergiesApi/RenewableEnergies.db-shm
+/RenewableEnergiesApi/RenewableEnergies.db-wal
 
 # .NET Core
 project.lock.json
