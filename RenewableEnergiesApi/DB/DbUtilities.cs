@@ -9,7 +9,7 @@ namespace RenewableEnergiesApi.DB
     {
         public void CreateDatabase()
         {
-            string csvFilePath = ".\\DB\\energy_dataset_.csv"; // Path to your CSV file
+            string csvFilePath = ".\\DB\\energy_dataset_.csv";
 
             using var context = new AppDbContext();
             if (context.Database.EnsureCreated())
