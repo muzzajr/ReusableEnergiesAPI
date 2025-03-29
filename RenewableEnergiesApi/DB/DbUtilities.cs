@@ -7,6 +7,9 @@ namespace RenewableEnergiesApi.DB
 {
     public class DbUtilities
     {
+        /// <summary>
+        /// Creates the database and populates it with data from a CSV file.
+        /// </summary>
         public void CreateDatabase()
         {
             string csvFilePath = ".\\DB\\energy_dataset_.csv";
