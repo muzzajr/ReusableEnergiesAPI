@@ -28,7 +28,7 @@ namespace RenewableEnergiesApi.Controllers
         /// <param name="energyType">The type of renewable energy.</param>
         /// <returns>A SingleBarResponse containing the average installed capacity.</returns>
         [HttpGet("average-installed-capacity/{energyType}")]
-        public async Task<SingleBarResponse> GetAverageInstalledCapacity([FromRoute] string energyType)
+        public async Task<SingleBarChartResponse> GetAverageInstalledCapacity([FromRoute] string energyType)
         {
             _ = Enum.TryParse(energyType, out TypesOfRenewableEnergy typeOfRenewableEnergy);
 
@@ -40,7 +40,7 @@ namespace RenewableEnergiesApi.Controllers
             var averageInstalledCapacity = type1Records
                 .Average(record => record.InstalledCapacityMW);
 
-            return new SingleBarResponse
+            return new SingleBarChartResponse
             {
                 Title = energyType,
                 Labels = [energyType],
@@ -54,7 +54,7 @@ namespace RenewableEnergiesApi.Controllers
         /// </summary>
         /// <returns>A SingleBarResponse containing the average installed capacity for all types.</returns>
         [HttpGet("all-average-installed-capacity")]
-        public async Task<SingleBarResponse> GettAllEnergyTypeInstalledCapacity()
+        public async Task<SingleBarChartResponse> GettAllEnergyTypeInstalledCapacity()
         {
             var allEnergyTypes = Enum.GetValues(typeof(TypesOfRenewableEnergy))
                 .Cast<TypesOfRenewableEnergy>()
@@ -72,7 +72,7 @@ namespace RenewableEnergiesApi.Controllers
                 allAverageInstalledCapacity.Add(averageInstalledCapacity);
             }
 
-            var response = new SingleBarResponse
+            var response = new SingleBarChartResponse
             {
                 Title = "Average Installed Capacity of Different Types of Renewable Energy",
                 Key = "Installed Capacity (MW)",
@@ -88,7 +88,7 @@ namespace RenewableEnergiesApi.Controllers
         /// </summary>
         /// <returns>A MultiBarResponse containing the average initial investment and GHG emission reduction for all types.</returns>
         [HttpGet("investment-and-emission-reduction")]
-        public async Task<MultiBarResponse> GettAllEnergyTypeInvestmentAndEmissionReduction()
+        public async Task<MultiBarChartResponse> GettAllEnergyTypeInvestmentAndEmissionReduction()
         {
             var allEnergyTypes = Enum.GetValues(typeof(TypesOfRenewableEnergy))
                 .Cast<TypesOfRenewableEnergy>()
@@ -113,7 +113,7 @@ namespace RenewableEnergiesApi.Controllers
                 allAverageEmissionReduction.Add(averageEmissionReduction);
             }
 
-            var response = new MultiBarResponse
+            var response = new MultiBarChartResponse
             {
                 Title = "Average Initial Investment compared to the Average GHG Emission Reduction",
                 Labels = [.. allEnergyTypes.Select(energyType => energyType.ToString())],
@@ -161,62 +161,6 @@ namespace RenewableEnergiesApi.Controllers
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-        }
-
-        /// <summary>
-        /// Represents a response for a single bar chart.
-        /// </summary>
-        public class SingleBarResponse
-        {
-            /// <summary>
-            /// The title of the chart.
-            /// </summary>
-            public required string Title { get; set; }
-
-            /// <summary>
-            /// The labels for the chart.
-            /// </summary>
-            public required List<string> Labels { get; set; }
-
-            /// <summary>
-            /// The key for the data points.
-            /// </summary>
-            public required string Key { get; set; }
-
-            /// <summary>
-            /// The data points for the chart.
-            /// </summary>
-            public required List<double> DataPoints { get; set; }
-
-            public SingleBarResponse() { }
-        }
-
-        /// <summary>
-        /// Represents a response for a multi-bar chart.
-        /// </summary>
-        public class MultiBarResponse
-        {
-            /// <summary>
-            /// The title of the chart.
-            /// </summary>
-            public required string Title { get; set; }
-
-            /// <summary>
-            /// The labels for the chart.
-            /// </summary>
-            public required List<string> Labels { get; set; }
-
-            /// <summary>
-            /// The keys for the data points.
-            /// </summary>
-            public required List<string> Keys { get; set; }
-
-            /// <summary>
-            /// The data points for the chart.
-            /// </summary>
-            public required List<List<double>> DataPoints { get; set; }
-
-            public MultiBarResponse() { }
         }
     }
 }
