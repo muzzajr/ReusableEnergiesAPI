@@ -40,13 +40,9 @@ This project is a RESTful API for managing and analyzing data related to renewab
 `dotnet run`
 
 
-## Usage
-
-Once the project is running, you can access the API at `https://localhost:5001` (or the port specified in your configuration).
-
 ### Swagger UI
 
-For easy testing and exploration of the API, Swagger UI is available at `https://localhost:5001/swagger`.
+For easy testing and exploration of the API, Swagger UI is available at `{BASE_URL}/swagger`.
 
 ## API Endpoints
 
