@@ -8,9 +8,16 @@ namespace RenewableEnergiesApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RenewableEnergiesDataController(AppDbContext context) : ControllerBase
+    public class RenewableEnergiesDataController : ControllerBase
     {
-        private readonly AppDbContext _context = context;
+        private readonly AppDbContext _context;
+        private readonly ILogger<RenewableEnergiesDataController> _logger;
+
+        public RenewableEnergiesDataController(AppDbContext context, ILogger<RenewableEnergiesDataController> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
 
         /// <summary>
         /// Gets the top ten records from the database.
@@ -19,6 +26,8 @@ namespace RenewableEnergiesApi.Controllers
         [HttpGet("get-top-ten-records")]
         public async Task<IEnumerable<RenewableEnergiesData>> GetTopTen()
         {
+            _logger.LogInformation("Fetching top ten records.");
+
             return await _context.Records.Take(10).ToListAsync();
         }
 
@@ -30,6 +39,8 @@ namespace RenewableEnergiesApi.Controllers
         [HttpGet("average-installed-capacity/{energyType}")]
         public async Task<SingleBarChartResponse> GetAverageInstalledCapacity([FromRoute] string energyType)
         {
+            _logger.LogInformation($"Calculating average installed capacity for {energyType}.");
+
             _ = Enum.TryParse(energyType, out TypesOfRenewableEnergy typeOfRenewableEnergy);
 
             var type1Records = await _context.Records
@@ -56,6 +67,8 @@ namespace RenewableEnergiesApi.Controllers
         [HttpGet("all-average-installed-capacity")]
         public async Task<SingleBarChartResponse> GettAllEnergyTypeInstalledCapacity()
         {
+            _logger.LogInformation("Calculating average installed capacity for all energy types.");
+
             var allEnergyTypes = Enum.GetValues(typeof(TypesOfRenewableEnergy))
                 .Cast<TypesOfRenewableEnergy>()
                 .ToList();
@@ -90,6 +103,8 @@ namespace RenewableEnergiesApi.Controllers
         [HttpGet("investment-and-emission-reduction")]
         public async Task<MultiBarChartResponse> GettAllEnergyTypeInvestmentAndEmissionReduction()
         {
+            _logger.LogInformation("Calculating average initial investment and GHG emission reduction for all energy types.");
+
             var allEnergyTypes = Enum.GetValues(typeof(TypesOfRenewableEnergy))
                 .Cast<TypesOfRenewableEnergy>()
                 .ToList();
@@ -139,6 +154,8 @@ namespace RenewableEnergiesApi.Controllers
             [FromQuery] string? energyType = null,
             [FromQuery] string? sortBy = null)
         {
+            _logger.LogInformation($"Fetching records for page {pageNumber} with page size {pageSize}. Using EnergyType {energyType} and sortBy value {sortBy}");
+
             var query = _context.Records.AsQueryable();
 
             if (!string.IsNullOrEmpty(energyType))
