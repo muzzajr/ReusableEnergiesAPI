@@ -72,10 +72,6 @@ For easy testing and exploration of the API, Swagger UI is available at `{BASE_U
 
 The database is created and populated with data from a CSV file (`energy_dataset_.csv`) located in the `DB` folder. The `DbUtilities` class handles the creation and population of the database.
 
-### RenewableEnergiesData Model
-
-The `RenewableEnergiesData` model represents the data structure for renewable energy records. It includes properties such as `TypeOfRenewableEnergy`, `InstalledCapacityMW`, `EnergyProductionMWh`, `InitialInvestmentUSD`, and more.
-
 ## Logging
 
 Logging is configured to use console and debug providers. Log messages are generated for various operations within the API to help with debugging and monitoring.
